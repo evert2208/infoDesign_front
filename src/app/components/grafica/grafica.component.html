@@ -1,9 +1,5 @@
 <div class="container">
-    <div>
-        <div style="display: block">
-            <canvas baseChart [data]="barChartData" [options]="barChartOptions" [plugins]="barChartPlugins" [type]="barChartType" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
-</canvas>
-        </div>
-        <button class="btn btn-primary" mat-button mat-raised-button color="primary" (click)="randomize()">Update</button>
-    </div>
+    <ngx-charts-bar-horizontal [view]="view" [scheme]="colorScheme" [results]="single" [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel"
+        [yAxisLabel]="yAxisLabel" (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
+    </ngx-charts-bar-horizontal>
 </div>

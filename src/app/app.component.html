@@ -5,12 +5,114 @@
 </nav>
 
 <div class="container">
-    <div class="row">
 
+    <div class="row" style="padding-top: 25px;">
+        <div class="col">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crear">crear grupo</button>
+            <div class="animated fadeIn fast" *ngIf="cargando">
+                <div class="col-12">
+                    <div class="alert alert-info text-center">
+                        <h4 class="alert-heading">Cargando...</h4>
+                        <i class="fa fa-spin fa-refresh fa-2x"></i>
+                        <p>por favor, espere</p>
+
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="col-12" *ngIf="!cargando && grupos.length===0">
+                <div class="alert alert-info text-center">
+                    <h4 class="alert-heading">No hay registros.</h4>
+
+
+                </div> -->
+            <!-- </div> -->
+            <table *ngIf="!cargando" class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Valor Maximo</th>
+                        <th scope="col">Valor actual</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Accion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let grupo of grupos">
+                        <th><input type="text" class="form-control" [(ngModel)]="grupo.nombre"></th>
+                        <td><input type="number" class="form-control" [(ngModel)]="grupo.valorMax"></td>
+                        <td>
+                            <div class="row">
+                                <div class="col">{{grupo.valorAct}}</div>
+                                <div class="col">
+                                    <div *ngIf="grupo.valorAct>grupo.valorMax">
+                                        <i class="fa-solid fa-triangle-exclamation" style="color: red;"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                        <td>{{grupo.fecha}}</td>
+                        <td>
+                            <button class="btn btn-warning" (click)="editarGrupo(grupo)">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+                            <button type="button" (click)=" eliminarGrupo(grupo)" class="btn btn-danger">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+                        </td>
+
+
+
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
     </div>
 
+    <!-- Modal Crear -->
+    <div class="modal fade" id="crear" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Crear Grupo</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form class="form-horizontal form-material" id="crearform" (ngSubmit)="crearGrupo()" autocomplete="off" [formGroup]="formulario">
+
+                    <div class="modal-body">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" id="floatingInput" placeholder="nombre" formControlName="nombre">
+                            <label for="floatingInput">Nombre</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="floatingInput" placeholder="nombre" formControlName="valorMax">
+                            <label for="floatingInput">Valor Maximo</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="floatingInput" placeholder="nombre" formControlName="valorAct">
+                            <label for="floatingInput">Valor Actual</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="date" class="form-control" id="floatingInput" placeholder="nombre" formControlName="fecha">
+                            <label for="floatingInput">fecha</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <div class="row">
-        <app-grafica></app-grafica>
+        <div class="col">
+            <app-grafica></app-grafica>
+        </div>
+
     </div>
 
 </div>
