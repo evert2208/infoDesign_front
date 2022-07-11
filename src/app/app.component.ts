@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { Grupo } from './models/grupo.model';
 import { GruposService } from './services/grupos.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -13,8 +14,9 @@ export class AppComponent implements OnInit {
   title = 'front_info';
   public cargando: boolean= true;
   public grupos: any | Grupo[]= [];
+  alerta: number = 0;
+  cargaalerta= false;
 
-  //public formulario: FormGroup|any;
 
   public formSubmmited = false;
 
@@ -22,21 +24,43 @@ export class AppComponent implements OnInit {
     public formulario: FormGroup|any = this.fb.group({
     nombre: ['', Validators.required],
     valorMax: ['', Validators.required],
-    valorAct: ['', Validators.required],
+    valorAct: ['0', Validators.required],
     fecha: ['', Validators.required],
+    alertas: [this.alerta]
 
   });
 
-
+  resultados: any[]=[];
   constructor(private gruposService: GruposService,
               private fb: FormBuilder){}
   ngOnInit(): void {
     this.cargarGrupos();
+    this.cargarGrafica();
+
+  }
+
+  cargarGrafica(){
+    this.gruposService.cargarGrupos().pipe(
+      map((resp: Grupo[])=>{
+        return resp.map(res=>{
+          return {
+            name:res.nombre,
+            value:res.alertas
+          }
+        })
+      })
+    ).subscribe(
+      results => {
+
+        this.resultados=results;
+      }
+    )
   }
   eliminarGrupo(grupo: Grupo){
     this.gruposService.borrarGrupo(grupo._id)
     .subscribe(resp => {
       this.cargarGrupos();
+      this.cargarGrafica();
       Swal.fire('Borrado', grupo.nombre, 'success')
     });
   }
@@ -53,8 +77,11 @@ export class AppComponent implements OnInit {
 
     this.gruposService.crearGrupo(this.formulario.value).subscribe(resp=> {
       this.cargarGrupos();
-      console.log(this.formulario.value);
-      Swal.fire('creado', `se creo el grupo ${this.grupos.nombre}`, 'success');
+      this.cargarGrafica();
+
+
+
+      Swal.fire('creado', `se creo el grupo`, 'success');
     }, (err)=> {
       // si sucede un error
       Swal.fire('Error', err.error.msg, 'error');
@@ -75,30 +102,25 @@ export class AppComponent implements OnInit {
     this.gruposService.actualizarGrupo(grupo._id, grupo.nombre, grupo.valorMax)
     .subscribe(resp => {
       this.cargarGrupos();
+      this.cargarGrafica();
       Swal.fire('Actualizado', grupo.nombre, 'success')
     })
   }
 
-  // async abrirSweetAlert(){
-  // const { value: formValues } = await Swal.fire({
-  //   title: 'Crear Grupo',
-  //   html:
-  //     '<h6>Nombre:<h6/>'+
-  //     '<input id="nombre" class="swal2-input">' +
-  //     '<h6>Valor Maximo:<h6/>'+
-  //     '<input id="valor_max" class="swal2-input">',
-  //   focusConfirm: false,
-  //   preConfirm: () => {
-  //     return [
-  //       document.getElementById('nombre').value,
-  //       document.getElementById('valor_max').value
-  //       ]
-  //     }
-  //   })
+  random(grupo: Grupo){
+
+    const rand = Math.floor( Math.random() * 100 );
+    grupo.valorAct= rand;
+    if(rand>grupo.valorMax){
+      grupo.alertas=grupo.alertas +1;
+      this.gruposService.actualizarValorAct(grupo._id, grupo.valorAct, grupo.alertas).subscribe(resp=>{
+        grupo.valorAct= rand;
+        this.cargarGrafica();
 
 
-  //   if (formValues) {
-  //   Swal.fire(JSON.stringify(formValues))
-  //   }
-  // }
+      } )
+    }
+  }
+
+
 }

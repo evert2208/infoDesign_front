@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { GruposService } from '../../services/grupos.service';
-import { single } from './data';
+//import { single } from './data';
+import { Grupo } from '../../models/grupo.model';
 @Component({
   selector: 'app-grafica',
   templateUrl: './grafica.component.html',
@@ -9,7 +10,8 @@ import { single } from './data';
 })
 export class GraficaComponent implements OnInit {
 
-  single=single;
+  @Input() results: any[]=[];
+
   view: [number, number] = [700, 400];
 
   // options
@@ -23,16 +25,18 @@ export class GraficaComponent implements OnInit {
   xAxisLabel: string = 'alarmas';
 
   colorScheme: string|any = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+    domain: ['#5AA454']
   };
 
-  constructor(gruposService: GruposService) {
+  constructor(private gruposService: GruposService) {
    // Object.assign(this, { single });
   }
 
 
   ngOnInit(): void {
+    //this.single = this.gruposService.cargarGrupos();
   }
+
 
   onSelect(data: any): void {
     //console.log('Item clicked', JSON.parse(JSON.stringify(data)));

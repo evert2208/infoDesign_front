@@ -7,5 +7,6 @@ export class Grupo {
     public valorAct: number,
     public fecha?: string,
     public _id?: string | any,
+    public alertas?: number|any
   ){ }
 }

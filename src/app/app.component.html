@@ -26,6 +26,9 @@
 
                 </div> -->
             <!-- </div> -->
+            <div style="position: right;">
+
+            </div>
             <table *ngIf="!cargando" class="table">
                 <thead>
                     <tr>
@@ -39,15 +42,17 @@
                 <tbody>
                     <tr *ngFor="let grupo of grupos">
                         <th><input type="text" class="form-control" [(ngModel)]="grupo.nombre"></th>
-                        <td><input type="number" class="form-control" [(ngModel)]="grupo.valorMax"></td>
+                        <td><input type="number" max="100" min="0" maxlength="2" class="form-control" [(ngModel)]="grupo.valorMax"></td>
                         <td>
                             <div class="row">
-                                <div class="col">{{grupo.valorAct}}</div>
+                                <div class="col" id="cont"><input class="form-control" type="number" [(ngModel)]="grupo.valorAct" disabled></div>
                                 <div class="col">
-                                    <div *ngIf="grupo.valorAct>grupo.valorMax">
-                                        <i class="fa-solid fa-triangle-exclamation" style="color: red;"></i>
+                                    <div *ngIf="grupo.valorAct>grupo.valorMax" class="text-center">
+                                        <i class="fa-solid fa-triangle-exclamation" style="color: red; font-size: 200%;"></i>
                                     </div>
+
                                 </div>
+                                <div class="col"><button class="btn btn-warning" type="button" (click)="random(grupo)"><i class="fa-solid fa-play"></i></button></div>
                             </div>
 
                         </td>
@@ -86,7 +91,7 @@
                             <label for="floatingInput">Nombre</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="number" class="form-control" id="floatingInput" placeholder="nombre" formControlName="valorMax">
+                            <input type="number" max="100" min="0" maxlength="2" class="form-control" id="floatingInput" placeholder="nombre" formControlName="valorMax">
                             <label for="floatingInput">Valor Maximo</label>
                         </div>
                         <div class="form-floating mb-3">
@@ -110,7 +115,7 @@
 
     <div class="row">
         <div class="col">
-            <app-grafica></app-grafica>
+            <app-grafica [results]="resultados"></app-grafica>
         </div>
 
     </div>

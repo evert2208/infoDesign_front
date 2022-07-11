@@ -27,6 +27,10 @@ export class GruposService {
     return this.http.post(url, grupo);
 
   }
+  actualizarValorAct(_id:string, ValorAct: number, alertas: number){
+    const url = `${base_url}/grupos/${_id}`;
+    return this.http.put(url, {ValorAct, alertas});
+  }
 
   actualizarGrupo(_id: string, nombre: string, valorMax: number ){
     const url = `${base_url}/grupos/${_id}`;
@@ -39,4 +43,6 @@ export class GruposService {
     return this.http.delete(url);
 
   }
+
+
 }
